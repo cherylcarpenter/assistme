@@ -1,15 +1,15 @@
-# OpenClaw Security & Trust
+# AssistMe Security & Trust
 
-**Live:** [trust.openclaw.ai](https://trust.openclaw.ai)
+**Live:** [trust.assistme.ai](https://trust.assistme.ai)
 
 ## Documents
 
-- [Threat Model](./THREAT-MODEL-ATLAS.md) - MITRE ATLAS-based threat model for the OpenClaw ecosystem
+- [Threat Model](./THREAT-MODEL-ATLAS.md) - MITRE ATLAS-based threat model for the AssistMe ecosystem
 - [Contributing to the Threat Model](./CONTRIBUTING-THREAT-MODEL.md) - How to add threats, mitigations, and attack chains
 
 ## Reporting Vulnerabilities
 
-See the [Trust page](https://trust.openclaw.ai) for full reporting instructions covering all repos.
+See the [Trust page](https://trust.assistme.ai) for full reporting instructions covering all repos.
 
 ## Contact
 

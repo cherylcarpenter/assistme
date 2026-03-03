@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/slack",
+  "name": "@assistme/slack",
   "version": "2026.3.2",
   "private": true,
-  "description": "OpenClaw Slack channel plugin",
+  "description": "AssistMe Slack channel plugin",
   "type": "module",
-  "openclaw": {
+  "assistme": {
     "extensions": [
       "./index.ts"
     ]

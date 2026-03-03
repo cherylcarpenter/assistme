@@ -26,8 +26,8 @@ const buildGatewayInstallPlan = vi.fn(
     programArguments: ["/bin/node", "cli", "gateway", "--port", String(params.port)],
     workingDirectory: process.cwd(),
     environment: {
-      OPENCLAW_GATEWAY_PORT: String(params.port),
-      ...(params.token ? { OPENCLAW_GATEWAY_TOKEN: params.token } : {}),
+      ASSISTME_GATEWAY_PORT: String(params.port),
+      ...(params.token ? { ASSISTME_GATEWAY_TOKEN: params.token } : {}),
     },
   }),
 );
@@ -113,15 +113,15 @@ describe("daemon-cli coverage", () => {
   beforeEach(() => {
     daemonProgram = createDaemonProgram();
     envSnapshot = captureEnv([
-      "OPENCLAW_STATE_DIR",
-      "OPENCLAW_CONFIG_PATH",
-      "OPENCLAW_GATEWAY_PORT",
-      "OPENCLAW_PROFILE",
+      "ASSISTME_STATE_DIR",
+      "ASSISTME_CONFIG_PATH",
+      "ASSISTME_GATEWAY_PORT",
+      "ASSISTME_PROFILE",
     ]);
-    process.env.OPENCLAW_STATE_DIR = "/tmp/openclaw-cli-state";
-    process.env.OPENCLAW_CONFIG_PATH = "/tmp/openclaw-cli-state/openclaw.json";
-    delete process.env.OPENCLAW_GATEWAY_PORT;
-    delete process.env.OPENCLAW_PROFILE;
+    process.env.ASSISTME_STATE_DIR = "/tmp/assistme-cli-state";
+    process.env.ASSISTME_CONFIG_PATH = "/tmp/assistme-cli-state/assistme.json";
+    delete process.env.ASSISTME_GATEWAY_PORT;
+    delete process.env.ASSISTME_PROFILE;
     serviceReadCommand.mockResolvedValue(null);
     buildGatewayInstallPlan.mockClear();
   });
@@ -150,12 +150,12 @@ describe("daemon-cli coverage", () => {
     serviceReadCommand.mockResolvedValueOnce({
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
-        OPENCLAW_PROFILE: "dev",
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon-state",
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon-state/openclaw.json",
-        OPENCLAW_GATEWAY_PORT: "19001",
+        ASSISTME_PROFILE: "dev",
+        ASSISTME_STATE_DIR: "/tmp/assistme-daemon-state",
+        ASSISTME_CONFIG_PATH: "/tmp/assistme-daemon-state/assistme.json",
+        ASSISTME_GATEWAY_PORT: "19001",
       },
-      sourcePath: "/tmp/ai.openclaw.gateway.plist",
+      sourcePath: "/tmp/ai.assistme.gateway.plist",
     });
 
     await runDaemonCommand(["daemon", "status", "--json"]);

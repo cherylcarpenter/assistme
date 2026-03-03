@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/tlon",
+  "name": "@assistme/tlon",
   "version": "2026.3.2",
-  "description": "OpenClaw Tlon/Urbit channel plugin",
+  "description": "AssistMe Tlon/Urbit channel plugin",
   "type": "module",
   "dependencies": {
     "@urbit/aura": "^3.0.0"
   },
-  "openclaw": {
+  "assistme": {
     "extensions": [
       "./index.ts"
     ],
@@ -21,7 +21,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/tlon",
+      "npmSpec": "@assistme/tlon",
       "localPath": "extensions/tlon",
       "defaultChoice": "npm"
     }

@@ -1,7 +1,7 @@
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { confirm, select, text } from "@clack/prompts";
-import type { OpenClawConfig } from "../config/config.js";
+import type { AssistMeConfig } from "../config/config.js";
 import type { SecretProviderConfig, SecretRef, SecretRefSource } from "../config/types.secrets.js";
 import { isSafeExecutableValue } from "../infra/exec-safety.js";
 import { runSecretsApply, type SecretsApplyResult } from "./apply.js";
@@ -59,7 +59,7 @@ function parseOptionalPositiveInt(value: string, max: number): number | undefine
   return parsed;
 }
 
-function getSecretProviders(config: OpenClawConfig): Record<string, SecretProviderConfig> {
+function getSecretProviders(config: AssistMeConfig): Record<string, SecretProviderConfig> {
   if (!isRecord(config.secrets?.providers)) {
     return {};
   }
@@ -67,7 +67,7 @@ function getSecretProviders(config: OpenClawConfig): Record<string, SecretProvid
 }
 
 function setSecretProvider(
-  config: OpenClawConfig,
+  config: AssistMeConfig,
   providerAlias: string,
   providerConfig: SecretProviderConfig,
 ): void {
@@ -78,7 +78,7 @@ function setSecretProvider(
   config.secrets.providers[providerAlias] = providerConfig;
 }
 
-function removeSecretProvider(config: OpenClawConfig, providerAlias: string): boolean {
+function removeSecretProvider(config: AssistMeConfig, providerAlias: string): boolean {
   if (!isRecord(config.secrets?.providers)) {
     return false;
   }
@@ -124,7 +124,7 @@ function providerHint(provider: SecretProviderConfig): string {
   return `exec (${provider.jsonOnly === false ? "json+text" : "json"})`;
 }
 
-function buildCandidates(config: OpenClawConfig): ConfigureCandidate[] {
+function buildCandidates(config: AssistMeConfig): ConfigureCandidate[] {
   const out: ConfigureCandidate[] = [];
   const providers = config.models?.providers as Record<string, unknown> | undefined;
   if (providers) {
@@ -185,7 +185,7 @@ function buildCandidates(config: OpenClawConfig): ConfigureCandidate[] {
   return out;
 }
 
-function toSourceChoices(config: OpenClawConfig): Array<{ value: SecretRefSource; label: string }> {
+function toSourceChoices(config: AssistMeConfig): Array<{ value: SecretRefSource; label: string }> {
   const hasSource = (source: SecretRefSource) =>
     Object.values(config.secrets?.providers ?? {}).some((provider) => provider?.source === source);
   const choices: Array<{ value: SecretRefSource; label: string }> = [
@@ -517,7 +517,7 @@ async function promptProviderConfig(
   return await promptExecProvider(current?.source === "exec" ? current : undefined);
 }
 
-async function configureProvidersInteractive(config: OpenClawConfig): Promise<void> {
+async function configureProvidersInteractive(config: AssistMeConfig): Promise<void> {
   while (true) {
     const providers = getSecretProviders(config);
     const providerEntries = Object.entries(providers).toSorted(([left], [right]) =>
@@ -625,7 +625,7 @@ async function configureProvidersInteractive(config: OpenClawConfig): Promise<vo
   }
 }
 
-function collectProviderPlanChanges(params: { original: OpenClawConfig; next: OpenClawConfig }): {
+function collectProviderPlanChanges(params: { original: AssistMeConfig; next: AssistMeConfig }): {
   upserts: Record<string, SecretProviderConfig>;
   deletes: string[];
 } {
@@ -690,7 +690,7 @@ export async function runSecretsConfigureInteractive(
   if (!params.providersOnly) {
     const candidates = buildCandidates(stagedConfig);
     if (candidates.length === 0) {
-      throw new Error("No configurable secret-bearing fields found in openclaw.json.");
+      throw new Error("No configurable secret-bearing fields found in assistme.json.");
     }
 
     const sourceChoices = toSourceChoices(stagedConfig);
@@ -798,7 +798,7 @@ export async function runSecretsConfigureInteractive(
     version: 1,
     protocolVersion: 1,
     generatedAt: new Date().toISOString(),
-    generatedBy: "openclaw secrets configure",
+    generatedBy: "assistme secrets configure",
     targets: [...selectedByPath.values()].map((entry) => ({
       type: entry.type,
       path: entry.path,

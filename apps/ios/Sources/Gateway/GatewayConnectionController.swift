@@ -6,7 +6,7 @@ import CryptoKit
 import EventKit
 import Foundation
 import Darwin
-import OpenClawKit
+import AssistMeKit
 import Network
 import Observation
 import Photos
@@ -754,7 +754,7 @@ final class GatewayConnectionController {
         if manualClientId?.isEmpty == false {
             return manualClientId!
         }
-        return "openclaw-ios"
+        return "assistme-ios"
     }
 
     private func resolveManualPort(host: String, port: Int, useTLS: Bool) -> Int? {
@@ -784,32 +784,32 @@ final class GatewayConnectionController {
     }
 
     private func currentCaps() -> [String] {
-        var caps = [OpenClawCapability.canvas.rawValue, OpenClawCapability.screen.rawValue]
+        var caps = [AssistMeCapability.canvas.rawValue, AssistMeCapability.screen.rawValue]
 
         // Default-on: if the key doesn't exist yet, treat it as enabled.
         let cameraEnabled =
             UserDefaults.standard.object(forKey: "camera.enabled") == nil
                 ? true
                 : UserDefaults.standard.bool(forKey: "camera.enabled")
-        if cameraEnabled { caps.append(OpenClawCapability.camera.rawValue) }
+        if cameraEnabled { caps.append(AssistMeCapability.camera.rawValue) }
 
         let voiceWakeEnabled = UserDefaults.standard.bool(forKey: VoiceWakePreferences.enabledKey)
-        if voiceWakeEnabled { caps.append(OpenClawCapability.voiceWake.rawValue) }
+        if voiceWakeEnabled { caps.append(AssistMeCapability.voiceWake.rawValue) }
 
         let locationModeRaw = UserDefaults.standard.string(forKey: "location.enabledMode") ?? "off"
-        let locationMode = OpenClawLocationMode(rawValue: locationModeRaw) ?? .off
-        if locationMode != .off { caps.append(OpenClawCapability.location.rawValue) }
+        let locationMode = AssistMeLocationMode(rawValue: locationModeRaw) ?? .off
+        if locationMode != .off { caps.append(AssistMeCapability.location.rawValue) }
 
-        caps.append(OpenClawCapability.device.rawValue)
+        caps.append(AssistMeCapability.device.rawValue)
         if WatchMessagingService.isSupportedOnDevice() {
-            caps.append(OpenClawCapability.watch.rawValue)
+            caps.append(AssistMeCapability.watch.rawValue)
         }
-        caps.append(OpenClawCapability.photos.rawValue)
-        caps.append(OpenClawCapability.contacts.rawValue)
-        caps.append(OpenClawCapability.calendar.rawValue)
-        caps.append(OpenClawCapability.reminders.rawValue)
+        caps.append(AssistMeCapability.photos.rawValue)
+        caps.append(AssistMeCapability.contacts.rawValue)
+        caps.append(AssistMeCapability.calendar.rawValue)
+        caps.append(AssistMeCapability.reminders.rawValue)
         if Self.motionAvailable() {
-            caps.append(OpenClawCapability.motion.rawValue)
+            caps.append(AssistMeCapability.motion.rawValue)
         }
 
         return caps
@@ -817,58 +817,58 @@ final class GatewayConnectionController {
 
     private func currentCommands() -> [String] {
         var commands: [String] = [
-            OpenClawCanvasCommand.present.rawValue,
-            OpenClawCanvasCommand.hide.rawValue,
-            OpenClawCanvasCommand.navigate.rawValue,
-            OpenClawCanvasCommand.evalJS.rawValue,
-            OpenClawCanvasCommand.snapshot.rawValue,
-            OpenClawCanvasA2UICommand.push.rawValue,
-            OpenClawCanvasA2UICommand.pushJSONL.rawValue,
-            OpenClawCanvasA2UICommand.reset.rawValue,
-            OpenClawScreenCommand.record.rawValue,
-            OpenClawSystemCommand.notify.rawValue,
-            OpenClawChatCommand.push.rawValue,
-            OpenClawTalkCommand.pttStart.rawValue,
-            OpenClawTalkCommand.pttStop.rawValue,
-            OpenClawTalkCommand.pttCancel.rawValue,
-            OpenClawTalkCommand.pttOnce.rawValue,
+            AssistMeCanvasCommand.present.rawValue,
+            AssistMeCanvasCommand.hide.rawValue,
+            AssistMeCanvasCommand.navigate.rawValue,
+            AssistMeCanvasCommand.evalJS.rawValue,
+            AssistMeCanvasCommand.snapshot.rawValue,
+            AssistMeCanvasA2UICommand.push.rawValue,
+            AssistMeCanvasA2UICommand.pushJSONL.rawValue,
+            AssistMeCanvasA2UICommand.reset.rawValue,
+            AssistMeScreenCommand.record.rawValue,
+            AssistMeSystemCommand.notify.rawValue,
+            AssistMeChatCommand.push.rawValue,
+            AssistMeTalkCommand.pttStart.rawValue,
+            AssistMeTalkCommand.pttStop.rawValue,
+            AssistMeTalkCommand.pttCancel.rawValue,
+            AssistMeTalkCommand.pttOnce.rawValue,
         ]
 
         let caps = Set(self.currentCaps())
-        if caps.contains(OpenClawCapability.camera.rawValue) {
-            commands.append(OpenClawCameraCommand.list.rawValue)
-            commands.append(OpenClawCameraCommand.snap.rawValue)
-            commands.append(OpenClawCameraCommand.clip.rawValue)
+        if caps.contains(AssistMeCapability.camera.rawValue) {
+            commands.append(AssistMeCameraCommand.list.rawValue)
+            commands.append(AssistMeCameraCommand.snap.rawValue)
+            commands.append(AssistMeCameraCommand.clip.rawValue)
         }
-        if caps.contains(OpenClawCapability.location.rawValue) {
-            commands.append(OpenClawLocationCommand.get.rawValue)
+        if caps.contains(AssistMeCapability.location.rawValue) {
+            commands.append(AssistMeLocationCommand.get.rawValue)
         }
-        if caps.contains(OpenClawCapability.device.rawValue) {
-            commands.append(OpenClawDeviceCommand.status.rawValue)
-            commands.append(OpenClawDeviceCommand.info.rawValue)
+        if caps.contains(AssistMeCapability.device.rawValue) {
+            commands.append(AssistMeDeviceCommand.status.rawValue)
+            commands.append(AssistMeDeviceCommand.info.rawValue)
         }
-        if caps.contains(OpenClawCapability.watch.rawValue) {
-            commands.append(OpenClawWatchCommand.status.rawValue)
-            commands.append(OpenClawWatchCommand.notify.rawValue)
+        if caps.contains(AssistMeCapability.watch.rawValue) {
+            commands.append(AssistMeWatchCommand.status.rawValue)
+            commands.append(AssistMeWatchCommand.notify.rawValue)
         }
-        if caps.contains(OpenClawCapability.photos.rawValue) {
-            commands.append(OpenClawPhotosCommand.latest.rawValue)
+        if caps.contains(AssistMeCapability.photos.rawValue) {
+            commands.append(AssistMePhotosCommand.latest.rawValue)
         }
-        if caps.contains(OpenClawCapability.contacts.rawValue) {
-            commands.append(OpenClawContactsCommand.search.rawValue)
-            commands.append(OpenClawContactsCommand.add.rawValue)
+        if caps.contains(AssistMeCapability.contacts.rawValue) {
+            commands.append(AssistMeContactsCommand.search.rawValue)
+            commands.append(AssistMeContactsCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.calendar.rawValue) {
-            commands.append(OpenClawCalendarCommand.events.rawValue)
-            commands.append(OpenClawCalendarCommand.add.rawValue)
+        if caps.contains(AssistMeCapability.calendar.rawValue) {
+            commands.append(AssistMeCalendarCommand.events.rawValue)
+            commands.append(AssistMeCalendarCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.reminders.rawValue) {
-            commands.append(OpenClawRemindersCommand.list.rawValue)
-            commands.append(OpenClawRemindersCommand.add.rawValue)
+        if caps.contains(AssistMeCapability.reminders.rawValue) {
+            commands.append(AssistMeRemindersCommand.list.rawValue)
+            commands.append(AssistMeRemindersCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.motion.rawValue) {
-            commands.append(OpenClawMotionCommand.activity.rawValue)
-            commands.append(OpenClawMotionCommand.pedometer.rawValue)
+        if caps.contains(AssistMeCapability.motion.rawValue) {
+            commands.append(AssistMeMotionCommand.activity.rawValue)
+            commands.append(AssistMeMotionCommand.pedometer.rawValue)
         }
 
         return commands

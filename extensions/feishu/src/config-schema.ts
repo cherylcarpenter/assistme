@@ -1,4 +1,4 @@
-import { normalizeAccountId } from "openclaw/plugin-sdk/account-id";
+import { normalizeAccountId } from "assistme/plugin-sdk/account-id";
 import { z } from "zod";
 export { z };
 

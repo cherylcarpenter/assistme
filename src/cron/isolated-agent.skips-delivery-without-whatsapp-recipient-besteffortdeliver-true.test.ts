@@ -14,7 +14,7 @@ import { makeCfg, makeJob, writeSessionStore } from "./isolated-agent.test-harne
 import { setupIsolatedAgentTurnMocks } from "./isolated-agent.test-setup.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-cron-delivery-suite-" });
+  return withTempHomeBase(fn, { prefix: "assistme-cron-delivery-suite-" });
 }
 
 async function runExplicitTelegramAnnounceTurn(params: {

@@ -11,7 +11,7 @@ import {
   resolveDefaultGroupPolicy,
   setAccountEnabledInConfigSection,
   type ChannelPlugin,
-} from "openclaw/plugin-sdk";
+} from "assistme/plugin-sdk";
 import {
   listIrcAccountIds,
   resolveDefaultIrcAccountId,

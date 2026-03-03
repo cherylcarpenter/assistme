@@ -1,9 +1,9 @@
 {
-  "name": "@openclaw/discord",
+  "name": "@assistme/discord",
   "version": "2026.3.2",
-  "description": "OpenClaw Discord channel plugin",
+  "description": "AssistMe Discord channel plugin",
   "type": "module",
-  "openclaw": {
+  "assistme": {
     "extensions": [
       "./index.ts"
     ]

@@ -4,7 +4,7 @@ import path from "node:path";
 import { CURRENT_SESSION_VERSION, SessionManager } from "@mariozechner/pi-coding-agent";
 import { resolveSessionAgentId } from "../../agents/agent-scope.js";
 import { normalizeChatType } from "../../channels/chat-type.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { AssistMeConfig } from "../../config/config.js";
 import {
   DEFAULT_RESET_TRIGGERS,
   deriveSessionMetaPatch,
@@ -146,7 +146,7 @@ type LegacyMainDeliveryRetirement = {
   entry: SessionEntry;
 };
 
-function resolveParentForkMaxTokens(cfg: OpenClawConfig): number {
+function resolveParentForkMaxTokens(cfg: AssistMeConfig): number {
   const configured = cfg.session?.parentForkMaxTokens;
   if (typeof configured === "number" && Number.isFinite(configured) && configured >= 0) {
     return Math.floor(configured);
@@ -155,7 +155,7 @@ function resolveParentForkMaxTokens(cfg: OpenClawConfig): number {
 }
 
 function maybeRetireLegacyMainDeliveryRoute(params: {
-  sessionCfg: OpenClawConfig["session"] | undefined;
+  sessionCfg: AssistMeConfig["session"] | undefined;
   sessionKey: string;
   sessionStore: Record<string, SessionEntry>;
   agentId: string;
@@ -259,7 +259,7 @@ function forkSessionFromParent(params: {
 
 export async function initSessionState(params: {
   ctx: MsgContext;
-  cfg: OpenClawConfig;
+  cfg: AssistMeConfig;
   commandAuthorized: boolean;
 }): Promise<SessionInitResult> {
   const { ctx, cfg, commandAuthorized } = params;

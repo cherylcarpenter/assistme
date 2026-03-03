@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/line",
+  "name": "@assistme/line",
   "version": "2026.3.2",
   "private": true,
-  "description": "OpenClaw LINE channel plugin",
+  "description": "AssistMe LINE channel plugin",
   "type": "module",
-  "openclaw": {
+  "assistme": {
     "extensions": [
       "./index.ts"
     ],
@@ -19,7 +19,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/line",
+      "npmSpec": "@assistme/line",
       "localPath": "extensions/line",
       "defaultChoice": "npm"
     }

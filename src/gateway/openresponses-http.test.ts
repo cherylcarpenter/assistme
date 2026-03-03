@@ -37,9 +37,9 @@ async function startServer(port: number, opts?: { openResponsesEnabled?: boolean
 }
 
 async function writeGatewayConfig(config: Record<string, unknown>) {
-  const configPath = process.env.OPENCLAW_CONFIG_PATH;
+  const configPath = process.env.ASSISTME_CONFIG_PATH;
   if (!configPath) {
-    throw new Error("OPENCLAW_CONFIG_PATH is required for gateway config tests");
+    throw new Error("ASSISTME_CONFIG_PATH is required for gateway config tests");
   }
   await fs.mkdir(path.dirname(configPath), { recursive: true });
   await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf-8");
@@ -96,7 +96,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
     const server = await startServer(port);
     try {
       const res = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
       });
       expect(res.status).toBe(404);
@@ -111,7 +111,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
     });
     try {
       const res = await postResponses(disabledPort, {
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
       });
       expect(res.status).toBe(404);
@@ -139,7 +139,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       const resMissingAuth = await fetch(`http://127.0.0.1:${port}/v1/responses`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ model: "openclaw", input: "hi" }),
+        body: JSON.stringify({ model: "assistme", input: "hi" }),
       });
       expect(resMissingAuth.status).toBe(401);
       await ensureResponseConsumed(resMissingAuth);
@@ -155,8 +155,8 @@ describe("OpenResponses HTTP API (e2e)", () => {
       mockAgentOnce([{ text: "hello" }]);
       const resHeader = await postResponses(
         port,
-        { model: "openclaw", input: "hi" },
-        { "x-openclaw-agent-id": "beta" },
+        { model: "assistme", input: "hi" },
+        { "x-assistme-agent-id": "beta" },
       );
       expect(resHeader.status).toBe(200);
       const optsHeader = (agentCommand.mock.calls[0] as unknown[] | undefined)?.[0];
@@ -169,7 +169,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       await ensureResponseConsumed(resHeader);
 
       mockAgentOnce([{ text: "hello" }]);
-      const resModel = await postResponses(port, { model: "openclaw:beta", input: "hi" });
+      const resModel = await postResponses(port, { model: "assistme:beta", input: "hi" });
       expect(resModel.status).toBe(200);
       const optsModel = (agentCommand.mock.calls[0] as unknown[] | undefined)?.[0];
       expect((optsModel as { sessionKey?: string } | undefined)?.sessionKey ?? "").toMatch(
@@ -180,8 +180,8 @@ describe("OpenResponses HTTP API (e2e)", () => {
       mockAgentOnce([{ text: "hello" }]);
       const resChannelHeader = await postResponses(
         port,
-        { model: "openclaw", input: "hi" },
-        { "x-openclaw-message-channel": "custom-client-channel" },
+        { model: "assistme", input: "hi" },
+        { "x-assistme-message-channel": "custom-client-channel" },
       );
       expect(resChannelHeader.status).toBe(200);
       const optsChannelHeader = (agentCommand.mock.calls[0] as unknown[] | undefined)?.[0];
@@ -193,7 +193,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       mockAgentOnce([{ text: "hello" }]);
       const resUser = await postResponses(port, {
         user: "alice",
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
       });
       expect(resUser.status).toBe(200);
@@ -205,7 +205,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "hello" }]);
       const resString = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: "hello world",
       });
       expect(resString.status).toBe(200);
@@ -215,7 +215,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "hello" }]);
       const resArray = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: [{ type: "message", role: "user", content: "hello there" }],
       });
       expect(resArray.status).toBe(200);
@@ -225,7 +225,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "hello" }]);
       const resSystemDeveloper = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: [
           { type: "message", role: "system", content: "You are a helpful assistant." },
           { type: "message", role: "developer", content: "Be concise." },
@@ -243,7 +243,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "hello" }]);
       const resInstructions = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
         instructions: "Always respond in French.",
       });
@@ -256,7 +256,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "I am Claude" }]);
       const resHistory = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: [
           { type: "message", role: "system", content: "You are a helpful assistant." },
           { type: "message", role: "user", content: "Hello, who are you?" },
@@ -276,7 +276,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "ok" }]);
       const resFunctionOutput = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: [
           { type: "message", role: "user", content: "What's the weather?" },
           { type: "function_call_output", call_id: "call_1", output: "Sunny, 70F." },
@@ -291,7 +291,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "ok" }]);
       const resInputFile = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: [
           {
             type: "message",
@@ -322,7 +322,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "ok" }]);
       const resToolNone = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
         tools: [
           {
@@ -341,7 +341,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "ok" }]);
       const resToolChoice = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
         tools: [
           {
@@ -365,7 +365,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       await ensureResponseConsumed(resToolChoice);
 
       const resUnknownTool = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
         tools: [
           {
@@ -380,7 +380,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       mockAgentOnce([{ text: "ok" }]);
       const resMaxTokens = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
         max_output_tokens: 123,
       });
@@ -399,7 +399,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       });
       const resUsage = await postResponses(port, {
         stream: false,
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
       });
       expect(resUsage.status).toBe(200);
@@ -410,7 +410,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       mockAgentOnce([{ text: "hello" }]);
       const resShape = await postResponses(port, {
         stream: false,
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
       });
       expect(resShape.status).toBe(200);
@@ -432,7 +432,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       await ensureResponseConsumed(resShape);
 
       const resNoUser = await postResponses(port, {
-        model: "openclaw",
+        model: "assistme",
         input: [{ type: "message", role: "system", content: "yo" }],
       });
       expect(resNoUser.status).toBe(400);
@@ -460,7 +460,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       const resDelta = await postResponses(port, {
         stream: true,
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
       });
       expect(resDelta.status).toBe(200);
@@ -496,7 +496,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       const resFallback = await postResponses(port, {
         stream: true,
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
       });
       expect(resFallback.status).toBe(200);
@@ -511,7 +511,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       const resTypeMatch = await postResponses(port, {
         stream: true,
-        model: "openclaw",
+        model: "assistme",
         input: "hi",
       });
       expect(resTypeMatch.status).toBe(200);
@@ -535,7 +535,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
     agentCommand.mockClear();
 
     const blockedPrivate = await postResponses(port, {
-      model: "openclaw",
+      model: "assistme",
       input: [
         {
           type: "message",
@@ -560,7 +560,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
     );
 
     const blockedMetadata = await postResponses(port, {
-      model: "openclaw",
+      model: "assistme",
       input: [
         {
           type: "message",
@@ -585,7 +585,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
     );
 
     const blockedScheme = await postResponses(port, {
-      model: "openclaw",
+      model: "assistme",
       input: [
         {
           type: "message",
@@ -638,7 +638,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       agentCommand.mockClear();
 
       const allowlistBlocked = await postResponses(allowlistPort, {
-        model: "openclaw",
+        model: "assistme",
         input: [
           {
             type: "message",
@@ -692,7 +692,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
     try {
       agentCommand.mockClear();
       const maxUrlBlocked = await postResponses(capPort, {
-        model: "openclaw",
+        model: "assistme",
         input: [
           {
             type: "message",

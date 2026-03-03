@@ -5,11 +5,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 vi.mock("./chrome.js", () => ({
   isChromeCdpReady: vi.fn(async () => true),
   isChromeReachable: vi.fn(async () => true),
-  launchOpenClawChrome: vi.fn(async () => {
+  launchAssistMeChrome: vi.fn(async () => {
     throw new Error("unexpected launch");
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw-test"),
-  stopOpenClawChrome: vi.fn(async () => {}),
+  resolveAssistMeUserDataDir: vi.fn(() => "/tmp/assistme-test"),
+  stopAssistMeChrome: vi.fn(async () => {}),
 }));
 
 import * as chromeModule from "./chrome.js";
@@ -39,9 +39,9 @@ function makeBrowserState(): BrowserServerState {
       noSandbox: false,
       attachOnly: false,
       ssrfPolicy: { allowPrivateNetwork: true },
-      defaultProfile: "openclaw",
+      defaultProfile: "assistme",
       profiles: {
-        openclaw: { cdpPort: 18800, color: "#FF4500" },
+        assistme: { cdpPort: 18800, color: "#FF4500" },
       },
     },
     profiles: new Map(),
@@ -49,14 +49,14 @@ function makeBrowserState(): BrowserServerState {
 }
 
 function mockLaunchedChrome(
-  launchOpenClawChrome: { mockResolvedValue: (value: RunningChrome) => unknown },
+  launchAssistMeChrome: { mockResolvedValue: (value: RunningChrome) => unknown },
   pid: number,
 ) {
   const proc = new EventEmitter() as unknown as ChildProcessWithoutNullStreams;
-  launchOpenClawChrome.mockResolvedValue({
+  launchAssistMeChrome.mockResolvedValue({
     pid,
     exe: { kind: "chromium", path: "/usr/bin/chromium" },
-    userDataDir: "/tmp/openclaw-test",
+    userDataDir: "/tmp/assistme-test",
     cdpPort: 18800,
     startedAt: Date.now(),
     proc,
@@ -73,50 +73,50 @@ describe("browser server-context ensureBrowserAvailable", () => {
   it("waits for CDP readiness after launching to avoid follow-up PortInUseError races (#21149)", async () => {
     vi.useFakeTimers();
 
-    const launchOpenClawChrome = vi.mocked(chromeModule.launchOpenClawChrome);
-    const stopOpenClawChrome = vi.mocked(chromeModule.stopOpenClawChrome);
+    const launchAssistMeChrome = vi.mocked(chromeModule.launchAssistMeChrome);
+    const stopAssistMeChrome = vi.mocked(chromeModule.stopAssistMeChrome);
     const isChromeReachable = vi.mocked(chromeModule.isChromeReachable);
     const isChromeCdpReady = vi.mocked(chromeModule.isChromeCdpReady);
 
     isChromeReachable.mockResolvedValue(false);
     isChromeCdpReady.mockResolvedValueOnce(false).mockResolvedValue(true);
-    mockLaunchedChrome(launchOpenClawChrome, 123);
+    mockLaunchedChrome(launchAssistMeChrome, 123);
 
     const state = makeBrowserState();
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const profile = ctx.forProfile("openclaw");
+    const profile = ctx.forProfile("assistme");
 
     const promise = profile.ensureBrowserAvailable();
     await vi.advanceTimersByTimeAsync(100);
     await expect(promise).resolves.toBeUndefined();
 
-    expect(launchOpenClawChrome).toHaveBeenCalledTimes(1);
+    expect(launchAssistMeChrome).toHaveBeenCalledTimes(1);
     expect(isChromeCdpReady).toHaveBeenCalled();
-    expect(stopOpenClawChrome).not.toHaveBeenCalled();
+    expect(stopAssistMeChrome).not.toHaveBeenCalled();
   });
 
   it("stops launched chrome when CDP readiness never arrives", async () => {
     vi.useFakeTimers();
 
-    const launchOpenClawChrome = vi.mocked(chromeModule.launchOpenClawChrome);
-    const stopOpenClawChrome = vi.mocked(chromeModule.stopOpenClawChrome);
+    const launchAssistMeChrome = vi.mocked(chromeModule.launchAssistMeChrome);
+    const stopAssistMeChrome = vi.mocked(chromeModule.stopAssistMeChrome);
     const isChromeReachable = vi.mocked(chromeModule.isChromeReachable);
     const isChromeCdpReady = vi.mocked(chromeModule.isChromeCdpReady);
 
     isChromeReachable.mockResolvedValue(false);
     isChromeCdpReady.mockResolvedValue(false);
-    mockLaunchedChrome(launchOpenClawChrome, 321);
+    mockLaunchedChrome(launchAssistMeChrome, 321);
 
     const state = makeBrowserState();
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const profile = ctx.forProfile("openclaw");
+    const profile = ctx.forProfile("assistme");
 
     const promise = profile.ensureBrowserAvailable();
     const rejected = expect(promise).rejects.toThrow("not reachable after start");
     await vi.advanceTimersByTimeAsync(8100);
     await rejected;
 
-    expect(launchOpenClawChrome).toHaveBeenCalledTimes(1);
-    expect(stopOpenClawChrome).toHaveBeenCalledTimes(1);
+    expect(launchAssistMeChrome).toHaveBeenCalledTimes(1);
+    expect(stopAssistMeChrome).toHaveBeenCalledTimes(1);
   });
 });

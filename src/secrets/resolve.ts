@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/config.js";
+import type { AssistMeConfig } from "../config/config.js";
 import type { SecretProviderConfig, SecretRef, SecretRefSource } from "../config/types.secrets.js";
 import { runTasksWithConcurrency } from "../utils/run-with-concurrency.js";
 import {
@@ -15,12 +15,12 @@ const DEFAULT_MAX_REFS_PER_PROVIDER = 512;
 const DEFAULT_MAX_BATCH_BYTES = 256 * 1024;
 
 type ResolveSecretRefOptions = {
-  config: OpenClawConfig;
+  config: AssistMeConfig;
   env?: NodeJS.ProcessEnv;
   cache?: SecretRefResolveCache;
 };
 
-function resolveResolutionLimits(config: OpenClawConfig): ResolutionLimits {
+function resolveResolutionLimits(config: AssistMeConfig): ResolutionLimits {
   const resolution = config.secrets?.resolution;
   return {
     maxProviderConcurrency: normalizePositiveInt(
@@ -39,7 +39,7 @@ function toProviderKey(source: SecretRefSource, provider: string): string {
   return `${source}:${provider}`;
 }
 
-function resolveConfiguredProvider(ref: SecretRef, config: OpenClawConfig): SecretProviderConfig {
+function resolveConfiguredProvider(ref: SecretRef, config: AssistMeConfig): SecretProviderConfig {
   const providerConfig = config.secrets?.providers?.[ref.provider];
   if (!providerConfig) {
     if (ref.source === "env" && ref.provider === resolveDefaultSecretProviderAlias(config, "env")) {

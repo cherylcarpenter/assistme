@@ -4,7 +4,7 @@ import {
   applyBasicWebhookRequestGuards,
   type RuntimeEnv,
   installRequestBodyLimitGuard,
-} from "openclaw/plugin-sdk";
+} from "assistme/plugin-sdk";
 import { createFeishuWSClient } from "./client.js";
 import {
   botOpenIds,

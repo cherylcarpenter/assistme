@@ -1,23 +1,23 @@
 ---
-summary: "CLI reference for `openclaw qr` (generate iOS pairing QR + setup code)"
+summary: "CLI reference for `assistme qr` (generate iOS pairing QR + setup code)"
 read_when:
   - You want to pair the iOS app with a gateway quickly
   - You need setup-code output for remote/manual sharing
 title: "qr"
 ---
 
-# `openclaw qr`
+# `assistme qr`
 
 Generate an iOS pairing QR and setup code from your current Gateway configuration.
 
 ## Usage
 
 ```bash
-openclaw qr
-openclaw qr --setup-code-only
-openclaw qr --json
-openclaw qr --remote
-openclaw qr --url wss://gateway.example/ws --token '<token>'
+assistme qr
+assistme qr --setup-code-only
+assistme qr --json
+assistme qr --remote
+assistme qr --url wss://gateway.example/ws --token '<token>'
 ```
 
 ## Options
@@ -35,5 +35,5 @@ openclaw qr --url wss://gateway.example/ws --token '<token>'
 
 - `--token` and `--password` are mutually exclusive.
 - After scanning, approve device pairing with:
-  - `openclaw devices list`
-  - `openclaw devices approve <requestId>`
+  - `assistme devices list`
+  - `assistme devices approve <requestId>`

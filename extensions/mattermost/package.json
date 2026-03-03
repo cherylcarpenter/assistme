@@ -1,9 +1,9 @@
 {
-  "name": "@openclaw/mattermost",
+  "name": "@assistme/mattermost",
   "version": "2026.3.2",
-  "description": "OpenClaw Mattermost channel plugin",
+  "description": "AssistMe Mattermost channel plugin",
   "type": "module",
-  "openclaw": {
+  "assistme": {
     "extensions": [
       "./index.ts"
     ],
@@ -17,7 +17,7 @@
       "order": 65
     },
     "install": {
-      "npmSpec": "@openclaw/mattermost",
+      "npmSpec": "@assistme/mattermost",
       "localPath": "extensions/mattermost",
       "defaultChoice": "npm"
     }

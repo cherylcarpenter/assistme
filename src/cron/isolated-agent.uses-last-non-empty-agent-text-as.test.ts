@@ -16,7 +16,7 @@ import {
 import type { CronJob } from "./types.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-cron-turn-suite-" });
+  return withTempHomeBase(fn, { prefix: "assistme-cron-turn-suite-" });
 }
 
 function makeDeps(): CliDeps {
@@ -267,7 +267,7 @@ describe("runCronIsolatedAgentTurn", () => {
       const call = vi.mocked(runEmbeddedPiAgent).mock.calls.at(-1)?.[0] as {
         agentDir?: string;
       };
-      expect(call?.agentDir).toBe(path.join(home, ".openclaw", "agents", "main", "agent"));
+      expect(call?.agentDir).toBe(path.join(home, ".assistme", "agents", "main", "agent"));
     });
   });
 
@@ -295,7 +295,7 @@ describe("runCronIsolatedAgentTurn", () => {
 
       const cfg = makeCfg(
         home,
-        path.join(home, ".openclaw", "agents", "{agentId}", "sessions", "sessions.json"),
+        path.join(home, ".assistme", "agents", "{agentId}", "sessions", "sessions.json"),
         {
           agents: {
             defaults: { workspace: path.join(home, "default-workspace") },

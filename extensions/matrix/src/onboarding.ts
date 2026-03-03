@@ -1,4 +1,4 @@
-import type { DmPolicy } from "openclaw/plugin-sdk";
+import type { DmPolicy } from "assistme/plugin-sdk";
 import {
   addWildcardAllowFrom,
   formatResolvedUnresolvedNote,
@@ -8,7 +8,7 @@ import {
   type ChannelOnboardingAdapter,
   type ChannelOnboardingDmPolicy,
   type WizardPrompter,
-} from "openclaw/plugin-sdk";
+} from "assistme/plugin-sdk";
 import { listMatrixDirectoryGroupsLive } from "./directory-live.js";
 import { resolveMatrixAccount } from "./matrix/accounts.js";
 import { ensureMatrixSdkInstalled, isMatrixSdkAvailable } from "./matrix/deps.js";
@@ -334,7 +334,7 @@ export const matrixOnboardingAdapter: ChannelOnboardingAdapter = {
     const deviceName = String(
       await prompter.text({
         message: "Matrix device name (optional)",
-        initialValue: existing.deviceName ?? "OpenClaw Gateway",
+        initialValue: existing.deviceName ?? "AssistMe Gateway",
       }),
     ).trim();
 

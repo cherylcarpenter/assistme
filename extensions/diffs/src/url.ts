@@ -1,9 +1,9 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import type { AssistMeConfig } from "assistme/plugin-sdk";
 
 const DEFAULT_GATEWAY_PORT = 18789;
 
 export function buildViewerUrl(params: {
-  config: OpenClawConfig;
+  config: AssistMeConfig;
   viewerPath: string;
   baseUrl?: string;
 }): string {
@@ -40,7 +40,7 @@ export function normalizeViewerBaseUrl(raw: string): string {
   return withoutTrailingSlash;
 }
 
-function resolveGatewayBaseUrl(config: OpenClawConfig): string {
+function resolveGatewayBaseUrl(config: AssistMeConfig): string {
   const scheme = config.gateway?.tls?.enabled ? "https" : "http";
   const port =
     typeof config.gateway?.port === "number" ? config.gateway.port : DEFAULT_GATEWAY_PORT;

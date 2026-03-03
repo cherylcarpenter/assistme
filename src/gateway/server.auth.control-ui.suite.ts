@@ -178,8 +178,8 @@ export function registerControlUiAndPairingSuite(): void {
     };
     testState.gatewayAuth = { mode: "token", token: "secret" };
     await writeTrustedProxyControlUiConfig({ allowInsecureAuth: true });
-    const prevToken = process.env.OPENCLAW_GATEWAY_TOKEN;
-    process.env.OPENCLAW_GATEWAY_TOKEN = "secret";
+    const prevToken = process.env.ASSISTME_GATEWAY_TOKEN;
+    process.env.ASSISTME_GATEWAY_TOKEN = "secret";
     try {
       await withGatewayServer(async ({ port }) => {
         const ws = new WebSocket(`ws://127.0.0.1:${port}`, {
@@ -213,7 +213,7 @@ export function registerControlUiAndPairingSuite(): void {
           clientMode: GATEWAY_CLIENT_MODES.WEBCHAT,
           identityPath: path.join(
             os.tmpdir(),
-            `openclaw-controlui-device-${process.pid}-${process.env.VITEST_POOL_ID ?? "0"}-${controlUiIdentityPathSeq++}.json`,
+            `assistme-controlui-device-${process.pid}-${process.env.VITEST_POOL_ID ?? "0"}-${controlUiIdentityPathSeq++}.json`,
           ),
           nonce: String(nonce),
         });
@@ -240,8 +240,8 @@ export function registerControlUiAndPairingSuite(): void {
   test("allows control ui with stale device identity when device auth is disabled", async () => {
     testState.gatewayControlUi = { dangerouslyDisableDeviceAuth: true };
     testState.gatewayAuth = { mode: "token", token: "secret" };
-    const prevToken = process.env.OPENCLAW_GATEWAY_TOKEN;
-    process.env.OPENCLAW_GATEWAY_TOKEN = "secret";
+    const prevToken = process.env.ASSISTME_GATEWAY_TOKEN;
+    process.env.ASSISTME_GATEWAY_TOKEN = "secret";
     try {
       await withGatewayServer(async ({ port }) => {
         const ws = await openWs(port, { origin: originForPort(port) });
@@ -424,7 +424,7 @@ export function registerControlUiAndPairingSuite(): void {
     const { loadOrCreateDeviceIdentity } = await import("../infra/device-identity.js");
     const { getPairedDevice, listDevicePairing } = await import("../infra/device-pairing.js");
     const { server, ws, port, prevToken } = await startServerWithClient("secret");
-    const identityDir = await mkdtemp(join(tmpdir(), "openclaw-device-scope-"));
+    const identityDir = await mkdtemp(join(tmpdir(), "assistme-device-scope-"));
     const identityPath = join(identityDir, "device.json");
     const identity = loadOrCreateDeviceIdentity(identityPath);
     const client = { ...TEST_OPERATOR_CLIENT };
@@ -493,7 +493,7 @@ export function registerControlUiAndPairingSuite(): void {
     const { approveDevicePairing, getPairedDevice, listDevicePairing, requestDevicePairing } =
       await import("../infra/device-pairing.js");
     const { server, ws, port, prevToken } = await startServerWithClient("secret");
-    const identityDir = await mkdtemp(join(tmpdir(), "openclaw-device-token-scope-"));
+    const identityDir = await mkdtemp(join(tmpdir(), "assistme-device-token-scope-"));
     const identityPath = join(identityDir, "device.json");
     const identity = loadOrCreateDeviceIdentity(identityPath);
     const devicePublicKey = publicKeyRawBase64UrlFromPem(identity.publicKeyPem);
@@ -544,7 +544,7 @@ export function registerControlUiAndPairingSuite(): void {
       await import("../infra/device-pairing.js");
     const { server, ws, port, prevToken } = await startServerWithClient("secret");
     ws.close();
-    const identityDir = await mkdtemp(join(tmpdir(), "openclaw-device-scope-"));
+    const identityDir = await mkdtemp(join(tmpdir(), "assistme-device-scope-"));
     const identityPath = join(identityDir, "device.json");
     const identity = loadOrCreateDeviceIdentity(identityPath);
     const client = { ...TEST_OPERATOR_CLIENT };
@@ -622,7 +622,7 @@ export function registerControlUiAndPairingSuite(): void {
     const { loadOrCreateDeviceIdentity } = await import("../infra/device-identity.js");
     const { listDevicePairing } = await import("../infra/device-pairing.js");
     const { server, ws, port, prevToken } = await startServerWithClient("secret");
-    const identityDir = await mkdtemp(join(tmpdir(), "openclaw-device-scope-"));
+    const identityDir = await mkdtemp(join(tmpdir(), "assistme-device-scope-"));
     const identityPath = join(identityDir, "device.json");
     const identity = loadOrCreateDeviceIdentity(identityPath);
     const client = { ...TEST_OPERATOR_CLIENT };
@@ -678,7 +678,7 @@ export function registerControlUiAndPairingSuite(): void {
     const { writeJsonAtomic } = await import("../infra/json-files.js");
     const { approveDevicePairing, getPairedDevice, listDevicePairing, requestDevicePairing } =
       await import("../infra/device-pairing.js");
-    const identityDir = await mkdtemp(join(tmpdir(), "openclaw-device-legacy-meta-"));
+    const identityDir = await mkdtemp(join(tmpdir(), "assistme-device-legacy-meta-"));
     const identityPath = join(identityDir, "device.json");
     const identity = loadOrCreateDeviceIdentity(identityPath);
     const deviceId = identity.deviceId;
@@ -749,7 +749,7 @@ export function registerControlUiAndPairingSuite(): void {
       await import("../infra/device-identity.js");
     const { approveDevicePairing, getPairedDevice, listDevicePairing, requestDevicePairing } =
       await import("../infra/device-pairing.js");
-    const identityDir = await mkdtemp(join(tmpdir(), "openclaw-device-legacy-"));
+    const identityDir = await mkdtemp(join(tmpdir(), "assistme-device-legacy-"));
     const identityPath = join(identityDir, "device.json");
     const identity = loadOrCreateDeviceIdentity(identityPath);
     const devicePublicKey = publicKeyRawBase64UrlFromPem(identity.publicKeyPem);
@@ -838,9 +838,9 @@ export function registerControlUiAndPairingSuite(): void {
     ws2.close();
     await server.close();
     if (prevToken === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_TOKEN;
+      delete process.env.ASSISTME_GATEWAY_TOKEN;
     } else {
-      process.env.OPENCLAW_GATEWAY_TOKEN = prevToken;
+      process.env.ASSISTME_GATEWAY_TOKEN = prevToken;
     }
   });
 

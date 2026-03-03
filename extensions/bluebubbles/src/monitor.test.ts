@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { OpenClawConfig, PluginRuntime } from "openclaw/plugin-sdk";
-import { removeAckReactionAfterReply, shouldAckReaction } from "openclaw/plugin-sdk";
+import type { AssistMeConfig, PluginRuntime } from "assistme/plugin-sdk";
+import { removeAckReactionAfterReply, shouldAckReaction } from "assistme/plugin-sdk";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ResolvedBlueBubblesAccount } from "./accounts.js";
 import { fetchBlueBubblesHistory } from "./history.js";
@@ -287,7 +287,7 @@ function createMockRuntime(): PluginRuntime {
     },
     state: {
       resolveStateDir: vi.fn(
-        () => "/tmp/openclaw",
+        () => "/tmp/assistme",
       ) as unknown as PluginRuntime["state"]["resolveStateDir"],
     },
   };
@@ -400,7 +400,7 @@ describe("BlueBubbles webhook monitor", () => {
   describe("webhook parsing + auth handling", () => {
     it("rejects non-POST requests", async () => {
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -423,7 +423,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("accepts POST requests with valid JSON payload", async () => {
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -459,7 +459,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("rejects requests with invalid JSON", async () => {
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -482,7 +482,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("accepts URL-encoded payload wrappers", async () => {
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -523,7 +523,7 @@ describe("BlueBubbles webhook monitor", () => {
       vi.useFakeTimers();
       try {
         const account = createMockAccount();
-        const config: OpenClawConfig = {};
+        const config: AssistMeConfig = {};
         const core = createMockRuntime();
         setBlueBubblesRuntime(core);
 
@@ -563,7 +563,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("rejects unauthorized requests before reading the body", async () => {
       const account = createMockAccount({ password: "secret-token" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -594,7 +594,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("authenticates via password query parameter", async () => {
       const account = createMockAccount({ password: "secret-token" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -630,7 +630,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("authenticates via x-password header", async () => {
       const account = createMockAccount({ password: "secret-token" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -670,7 +670,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("rejects unauthorized requests with wrong password", async () => {
       const account = createMockAccount({ password: "secret-token" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -706,7 +706,7 @@ describe("BlueBubbles webhook monitor", () => {
     it("rejects ambiguous routing when multiple targets match the same password", async () => {
       const accountA = createMockAccount({ password: "secret-token" });
       const accountB = createMockAccount({ password: "secret-token" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -760,7 +760,7 @@ describe("BlueBubbles webhook monitor", () => {
     it("ignores targets without passwords when a password-authenticated target matches", async () => {
       const accountStrict = createMockAccount({ password: "secret-token" });
       const accountWithoutPassword = createMockAccount({ password: undefined });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -813,7 +813,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("requires authentication for loopback requests when password is configured", async () => {
       const account = createMockAccount({ password: "secret-token" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
       for (const remoteAddress of ["127.0.0.1", "::1", "::ffff:127.0.0.1"]) {
@@ -850,7 +850,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("rejects targets without passwords for loopback and proxied-looking requests", async () => {
       const account = createMockAccount({ password: undefined });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -907,7 +907,7 @@ describe("BlueBubbles webhook monitor", () => {
       vi.mocked(resolveChatGuidForTarget).mockClear();
 
       const account = createMockAccount({ groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -955,7 +955,7 @@ describe("BlueBubbles webhook monitor", () => {
       });
 
       const account = createMockAccount({ groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1001,7 +1001,7 @@ describe("BlueBubbles webhook monitor", () => {
         dmPolicy: "allowlist",
         allowFrom: ["+15551234567"],
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1042,7 +1042,7 @@ describe("BlueBubbles webhook monitor", () => {
         dmPolicy: "allowlist",
         allowFrom: ["+15559999999"], // Different number
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1081,7 +1081,7 @@ describe("BlueBubbles webhook monitor", () => {
         dmPolicy: "allowlist",
         allowFrom: [],
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1121,7 +1121,7 @@ describe("BlueBubbles webhook monitor", () => {
         dmPolicy: "pairing",
         allowFrom: [],
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1160,7 +1160,7 @@ describe("BlueBubbles webhook monitor", () => {
         dmPolicy: "pairing",
         allowFrom: ["+15559999999"], // Different number than sender
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1201,7 +1201,7 @@ describe("BlueBubbles webhook monitor", () => {
         dmPolicy: "pairing",
         allowFrom: ["+15559999999"], // Different number than sender
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1242,7 +1242,7 @@ describe("BlueBubbles webhook monitor", () => {
         dmPolicy: "open",
         allowFrom: [],
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1279,7 +1279,7 @@ describe("BlueBubbles webhook monitor", () => {
       const account = createMockAccount({
         dmPolicy: "disabled",
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1318,7 +1318,7 @@ describe("BlueBubbles webhook monitor", () => {
       const account = createMockAccount({
         groupPolicy: "open",
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1356,7 +1356,7 @@ describe("BlueBubbles webhook monitor", () => {
       const account = createMockAccount({
         groupPolicy: "disabled",
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1395,7 +1395,7 @@ describe("BlueBubbles webhook monitor", () => {
         groupPolicy: "allowlist",
         dmPolicy: "open",
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1434,7 +1434,7 @@ describe("BlueBubbles webhook monitor", () => {
         groupPolicy: "allowlist",
         groupAllowFrom: ["chat_guid:iMessage;+;chat123456"],
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1475,7 +1475,7 @@ describe("BlueBubbles webhook monitor", () => {
       mockMatchesMentionPatterns.mockReturnValue(true);
 
       const account = createMockAccount({ groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1516,7 +1516,7 @@ describe("BlueBubbles webhook monitor", () => {
       mockMatchesMentionPatterns.mockReturnValue(false);
 
       const account = createMockAccount({ groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1554,7 +1554,7 @@ describe("BlueBubbles webhook monitor", () => {
       mockResolveRequireMention.mockReturnValue(false);
 
       const account = createMockAccount({ groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1592,7 +1592,7 @@ describe("BlueBubbles webhook monitor", () => {
   describe("group metadata", () => {
     it("includes group subject + members in ctx", async () => {
       const account = createMockAccount({ groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1638,7 +1638,7 @@ describe("BlueBubbles webhook monitor", () => {
   describe("group sender identity in envelope", () => {
     it("includes sender in envelope body and group label as from for group messages", async () => {
       const account = createMockAccount({ groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1689,7 +1689,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("falls back to group:peerId when chatName is missing", async () => {
       const account = createMockAccount({ groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1731,7 +1731,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("uses sender as from label for DM messages", async () => {
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1779,7 +1779,7 @@ describe("BlueBubbles webhook monitor", () => {
       vi.useFakeTimers();
       try {
         const account = createMockAccount({ dmPolicy: "open" });
-        const config: OpenClawConfig = {};
+        const config: AssistMeConfig = {};
         const core = createMockRuntime();
 
         // Use a timing-aware debouncer test double that respects debounceMs/buildKey/shouldDebounce.
@@ -1916,7 +1916,7 @@ describe("BlueBubbles webhook monitor", () => {
   describe("reply metadata", () => {
     it("surfaces reply fields in ctx when provided", async () => {
       const account = createMockAccount({ dmPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -1964,7 +1964,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("preserves part index prefixes in reply tags when short IDs are unavailable", async () => {
       const account = createMockAccount({ dmPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2009,7 +2009,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("hydrates missing reply sender/body from the recent-message cache", async () => {
       const account = createMockAccount({ dmPolicy: "open", groupPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2079,7 +2079,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("falls back to threadOriginatorGuid when reply metadata is absent", async () => {
       const account = createMockAccount({ dmPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2120,7 +2120,7 @@ describe("BlueBubbles webhook monitor", () => {
   describe("tapback text parsing", () => {
     it("does not rewrite tapback-like text without metadata", async () => {
       const account = createMockAccount({ dmPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2160,7 +2160,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("parses tapback text with custom emoji when metadata is present", async () => {
       const account = createMockAccount({ dmPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2205,7 +2205,7 @@ describe("BlueBubbles webhook monitor", () => {
       vi.mocked(sendBlueBubblesReaction).mockClear();
 
       const account = createMockAccount({ dmPolicy: "open" });
-      const config: OpenClawConfig = {
+      const config: AssistMeConfig = {
         messages: {
           ackReaction: "❤️",
           ackReactionScope: "direct",
@@ -2263,7 +2263,7 @@ describe("BlueBubbles webhook monitor", () => {
         groupPolicy: "open",
         allowFrom: ["+15551234567"],
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2306,7 +2306,7 @@ describe("BlueBubbles webhook monitor", () => {
         groupPolicy: "open",
         allowFrom: [], // No one authorized
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2347,7 +2347,7 @@ describe("BlueBubbles webhook monitor", () => {
         dmPolicy: "open",
         allowFrom: [],
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2394,7 +2394,7 @@ describe("BlueBubbles webhook monitor", () => {
       const account = createMockAccount({
         sendReadReceipts: true,
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2435,7 +2435,7 @@ describe("BlueBubbles webhook monitor", () => {
       const account = createMockAccount({
         sendReadReceipts: false,
       });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2474,7 +2474,7 @@ describe("BlueBubbles webhook monitor", () => {
       vi.mocked(sendBlueBubblesTyping).mockClear();
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2522,7 +2522,7 @@ describe("BlueBubbles webhook monitor", () => {
       vi.mocked(sendBlueBubblesTyping).mockClear();
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2571,7 +2571,7 @@ describe("BlueBubbles webhook monitor", () => {
       vi.mocked(sendBlueBubblesTyping).mockClear();
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2621,7 +2621,7 @@ describe("BlueBubbles webhook monitor", () => {
       });
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2672,7 +2672,7 @@ describe("BlueBubbles webhook monitor", () => {
       });
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2744,7 +2744,7 @@ describe("BlueBubbles webhook monitor", () => {
       });
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2810,7 +2810,7 @@ describe("BlueBubbles webhook monitor", () => {
       mockEnqueueSystemEvent.mockClear();
 
       const account = createMockAccount({ dmPolicy: "pairing", allowFrom: [] });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2847,7 +2847,7 @@ describe("BlueBubbles webhook monitor", () => {
       mockEnqueueSystemEvent.mockClear();
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2887,7 +2887,7 @@ describe("BlueBubbles webhook monitor", () => {
       mockEnqueueSystemEvent.mockClear();
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2927,7 +2927,7 @@ describe("BlueBubbles webhook monitor", () => {
       mockEnqueueSystemEvent.mockClear();
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -2964,7 +2964,7 @@ describe("BlueBubbles webhook monitor", () => {
       mockEnqueueSystemEvent.mockClear();
 
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -3005,7 +3005,7 @@ describe("BlueBubbles webhook monitor", () => {
   describe("short message ID mapping", () => {
     it("assigns sequential short IDs to messages", async () => {
       const account = createMockAccount({ dmPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -3045,7 +3045,7 @@ describe("BlueBubbles webhook monitor", () => {
 
     it("resolves short ID back to UUID", async () => {
       const account = createMockAccount({ dmPolicy: "open" });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -3125,7 +3125,7 @@ describe("BlueBubbles webhook monitor", () => {
         ...createMockAccount({ dmHistoryLimit: 3, password: "password-b" }),
         accountId: "acc-b",
       };
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -3202,7 +3202,7 @@ describe("BlueBubbles webhook monitor", () => {
       });
 
       const account = createMockAccount({ dmHistoryLimit: 2 });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -3249,7 +3249,7 @@ describe("BlueBubbles webhook monitor", () => {
         });
 
       const account = createMockAccount({ dmHistoryLimit: 4 });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -3330,7 +3330,7 @@ describe("BlueBubbles webhook monitor", () => {
       });
 
       const account = createMockAccount({ dmHistoryLimit: 20 });
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 
@@ -3371,7 +3371,7 @@ describe("BlueBubbles webhook monitor", () => {
   describe("fromMe messages", () => {
     it("ignores messages from self (fromMe=true)", async () => {
       const account = createMockAccount();
-      const config: OpenClawConfig = {};
+      const config: AssistMeConfig = {};
       const core = createMockRuntime();
       setBlueBubblesRuntime(core);
 

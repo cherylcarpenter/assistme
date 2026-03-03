@@ -1,13 +1,16 @@
 {
-  "name": "@openclaw/memory-core",
+  "name": "@assistme/memory-core",
   "version": "2026.3.2",
   "private": true,
-  "description": "OpenClaw core memory search plugin",
+  "description": "AssistMe core memory search plugin",
   "type": "module",
-  "peerDependencies": {
-    "openclaw": ">=2026.3.1"
+  "devDependencies": {
+    "assistme": "workspace:*"
   },
-  "openclaw": {
+  "peerDependencies": {
+    "assistme": ">=2026.3.1"
+  },
+  "assistme": {
     "extensions": [
       "./index.ts"
     ]

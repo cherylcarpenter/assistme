@@ -1,6 +1,6 @@
-# @openclaw/diffs
+# @assistme/diffs
 
-Read-only diff viewer plugin for **OpenClaw** agents.
+Read-only diff viewer plugin for **AssistMe** agents.
 
 It gives agents one tool, `diffs`, that can:
 
@@ -67,7 +67,7 @@ Input safety limits:
 
 ## Plugin Defaults
 
-Set plugin-wide defaults in `~/.openclaw/openclaw.json`:
+Set plugin-wide defaults in `~/.assistme/assistme.json`:
 
 ```json5
 {
@@ -133,10 +133,10 @@ Use the `diffs` tool in `file` mode for this before and after input. After it re
 Path: README.md
 
 Before:
-OpenClaw supports plugins.
+AssistMe supports plugins.
 
 After:
-OpenClaw supports plugins and hosted diff views.
+AssistMe supports plugins and hosted diff views.
 ```
 
 Do both:
@@ -171,7 +171,7 @@ diff --git a/src/example.ts b/src/example.ts
 ## Notes
 
 - The viewer is hosted locally through the gateway under `/plugins/diffs/...`.
-- Artifacts are ephemeral and stored in the plugin temp subfolder (`$TMPDIR/openclaw-diffs`).
+- Artifacts are ephemeral and stored in the plugin temp subfolder (`$TMPDIR/assistme-diffs`).
 - Default viewer URLs use loopback (`127.0.0.1`) unless you set `baseUrl` (or use `gateway.bind=custom` + `gateway.customBindHost`).
 - Remote viewer misses are throttled to reduce token-guess abuse.
 - PNG or PDF rendering requires a Chromium-compatible browser. Set `browser.executablePath` if auto-detection is not enough.

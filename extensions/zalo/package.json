@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/zalo",
+  "name": "@assistme/zalo",
   "version": "2026.3.2",
-  "description": "OpenClaw Zalo channel plugin",
+  "description": "AssistMe Zalo channel plugin",
   "type": "module",
   "dependencies": {
     "undici": "7.22.0"
   },
-  "openclaw": {
+  "assistme": {
     "extensions": [
       "./index.ts"
     ],
@@ -24,7 +24,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/zalo",
+      "npmSpec": "@assistme/zalo",
       "localPath": "extensions/zalo",
       "defaultChoice": "npm"
     }

@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { MsgContext } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/config.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import type { AssistMeConfig } from "../config/config.js";
+import { resolvePreferredAssistMeTmpDir } from "../infra/tmp-assistme-dir.js";
 import { createSafeAudioFixtureBuffer } from "./runner.test-utils.js";
 
 // ---------------------------------------------------------------------------
@@ -66,7 +66,7 @@ vi.mock("../infra/outbound/deliver.js", () => ({
 let applyMediaUnderstanding: typeof import("./apply.js").applyMediaUnderstanding;
 let clearMediaUnderstandingBinaryCacheForTests: () => void;
 
-const TEMP_MEDIA_PREFIX = "openclaw-echo-transcript-test-";
+const TEMP_MEDIA_PREFIX = "assistme-echo-transcript-test-";
 let suiteTempMediaRootDir = "";
 
 async function createTempAudioFile(): Promise<string> {
@@ -93,10 +93,10 @@ function createAudioConfigWithEcho(opts?: {
   echoFormat?: string;
   transcribedText?: string;
 }): {
-  cfg: OpenClawConfig;
+  cfg: AssistMeConfig;
   providers: Record<string, { id: string; transcribeAudio: () => Promise<{ text: string }> }>;
 } {
-  const cfg: OpenClawConfig = {
+  const cfg: AssistMeConfig = {
     tools: {
       media: {
         audio: {
@@ -124,7 +124,7 @@ function createAudioConfigWithEcho(opts?: {
 
 describe("applyMediaUnderstanding – echo transcript", () => {
   beforeAll(async () => {
-    const baseDir = resolvePreferredOpenClawTmpDir();
+    const baseDir = resolvePreferredAssistMeTmpDir();
     await fs.mkdir(baseDir, { recursive: true });
     suiteTempMediaRootDir = await fs.mkdtemp(path.join(baseDir, TEMP_MEDIA_PREFIX));
     const mod = await import("./apply.js");
@@ -160,7 +160,7 @@ describe("applyMediaUnderstanding – echo transcript", () => {
   it("does NOT echo when echoTranscript is absent (default)", async () => {
     const mediaPath = await createTempAudioFile();
     const ctx = createAudioCtxWithProvider(mediaPath);
-    const cfg: OpenClawConfig = {
+    const cfg: AssistMeConfig = {
       tools: {
         media: {
           audio: {
@@ -231,7 +231,7 @@ describe("applyMediaUnderstanding – echo transcript", () => {
       From: "+10000000001",
     };
 
-    const cfg: OpenClawConfig = {
+    const cfg: AssistMeConfig = {
       tools: {
         media: {
           audio: {
@@ -258,7 +258,7 @@ describe("applyMediaUnderstanding – echo transcript", () => {
   it("does NOT echo when transcription fails", async () => {
     const mediaPath = await createTempAudioFile();
     const ctx = createAudioCtxWithProvider(mediaPath);
-    const cfg: OpenClawConfig = {
+    const cfg: AssistMeConfig = {
       tools: {
         media: {
           audio: {

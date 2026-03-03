@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/telegram",
+  "name": "@assistme/telegram",
   "version": "2026.3.2",
   "private": true,
-  "description": "OpenClaw Telegram channel plugin",
+  "description": "AssistMe Telegram channel plugin",
   "type": "module",
-  "openclaw": {
+  "assistme": {
     "extensions": [
       "./index.ts"
     ]

@@ -486,7 +486,7 @@ describe("readWorkspaceContextForSummary", () => {
   it.runIf(process.platform !== "win32")(
     "returns empty when AGENTS.md is a symlink escape",
     async () => {
-      const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-compaction-summary-"));
+      const root = fs.mkdtempSync(path.join(os.tmpdir(), "assistme-compaction-summary-"));
       const prevCwd = process.cwd();
       try {
         const outside = path.join(root, "outside-secret.txt");
@@ -504,7 +504,7 @@ describe("readWorkspaceContextForSummary", () => {
   it.runIf(process.platform !== "win32")(
     "returns empty when AGENTS.md is a hardlink alias",
     async () => {
-      const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-compaction-summary-"));
+      const root = fs.mkdtempSync(path.join(os.tmpdir(), "assistme-compaction-summary-"));
       const prevCwd = process.cwd();
       try {
         const outside = path.join(root, "outside-secret.txt");

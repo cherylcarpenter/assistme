@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { normalizeProviderId } from "../agents/model-selection.js";
-import { resolveStateDir, type OpenClawConfig } from "../config/config.js";
+import { resolveStateDir, type AssistMeConfig } from "../config/config.js";
 import { coerceSecretRef, type SecretRef } from "../config/types.secrets.js";
 import { resolveConfigDir, resolveUserPath } from "../utils.js";
 import { collectAuthStorePaths } from "./auth-store-paths.js";
@@ -170,7 +170,7 @@ function readJsonObject(filePath: string): {
 }
 
 function collectConfigSecrets(params: {
-  config: OpenClawConfig;
+  config: AssistMeConfig;
   configPath: string;
   collector: AuditCollector;
 }): void {
@@ -447,7 +447,7 @@ function collectAuthJsonResidue(params: { stateDir: string; collector: AuditColl
 
 async function collectUnresolvedRefFindings(params: {
   collector: AuditCollector;
-  config: OpenClawConfig;
+  config: AssistMeConfig;
   env: NodeJS.ProcessEnv;
 }): Promise<void> {
   const cache: SecretRefResolveCache = {};
@@ -561,7 +561,7 @@ function collectShadowingFindings(collector: AuditCollector): void {
       addFinding(collector, {
         code: "REF_SHADOWED",
         severity: "warn",
-        file: "openclaw.json",
+        file: "assistme.json",
         jsonPath: configPath,
         message: `Auth profile credentials (${modeText}) take precedence for provider "${provider}", so this config ref may never be used.`,
         provider,
@@ -600,8 +600,8 @@ export async function runSecretsAudit(
   } = {},
 ): Promise<SecretsAuditReport> {
   const env = params.env ?? process.env;
-  const previousAuthStoreReadOnly = process.env.OPENCLAW_AUTH_STORE_READONLY;
-  process.env.OPENCLAW_AUTH_STORE_READONLY = "1";
+  const previousAuthStoreReadOnly = process.env.ASSISTME_AUTH_STORE_READONLY;
+  process.env.ASSISTME_AUTH_STORE_READONLY = "1";
   try {
     const io = createSecretsConfigIO({ env });
     const snapshot = await io.readConfigFileSnapshot();
@@ -618,7 +618,7 @@ export async function runSecretsAudit(
 
     const stateDir = resolveStateDir(env, os.homedir);
     const envPath = path.join(resolveConfigDir(env, os.homedir), ".env");
-    const config = snapshot.valid ? snapshot.config : ({} as OpenClawConfig);
+    const config = snapshot.valid ? snapshot.config : ({} as AssistMeConfig);
 
     if (snapshot.valid) {
       collectConfigSecrets({
@@ -675,9 +675,9 @@ export async function runSecretsAudit(
     };
   } finally {
     if (previousAuthStoreReadOnly === undefined) {
-      delete process.env.OPENCLAW_AUTH_STORE_READONLY;
+      delete process.env.ASSISTME_AUTH_STORE_READONLY;
     } else {
-      process.env.OPENCLAW_AUTH_STORE_READONLY = previousAuthStoreReadOnly;
+      process.env.ASSISTME_AUTH_STORE_READONLY = previousAuthStoreReadOnly;
     }
   }
 }
@@ -693,7 +693,7 @@ export function resolveSecretsAuditExitCode(report: SecretsAuditReport, check: b
 }
 
 export function applySecretsPlanTarget(
-  config: OpenClawConfig,
+  config: AssistMeConfig,
   pathLabel: string,
   value: unknown,
 ): void {

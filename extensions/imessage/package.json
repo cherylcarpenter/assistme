@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/imessage",
+  "name": "@assistme/imessage",
   "version": "2026.3.2",
   "private": true,
-  "description": "OpenClaw iMessage channel plugin",
+  "description": "AssistMe iMessage channel plugin",
   "type": "module",
-  "openclaw": {
+  "assistme": {
     "extensions": [
       "./index.ts"
     ]

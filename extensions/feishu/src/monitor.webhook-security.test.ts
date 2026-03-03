@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
-import type { ClawdbotConfig } from "openclaw/plugin-sdk";
+import type { ClawdbotConfig } from "assistme/plugin-sdk";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { probeFeishuMock } from "./monitor.test-mocks.js";
 

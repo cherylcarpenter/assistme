@@ -1,4 +1,4 @@
-# OpenClaw docs i18n assets
+# AssistMe docs i18n assets
 
 This folder stores **generated** and **config** files for documentation translations.
 

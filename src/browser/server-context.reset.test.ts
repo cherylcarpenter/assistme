@@ -40,7 +40,7 @@ describe("createProfileResetOps", () => {
       getProfileState: () => ({ profile: {} as never, running: null }),
       stopRunningBrowser: vi.fn(async () => ({ stopped: false })),
       isHttpReachable: vi.fn(async () => false),
-      resolveOpenClawUserDataDir: (name: string) => `/tmp/${name}`,
+      resolveAssistMeUserDataDir: (name: string) => `/tmp/${name}`,
     });
 
     await expect(ops.resetProfile()).resolves.toEqual({
@@ -62,21 +62,21 @@ describe("createProfileResetOps", () => {
         cdpIsLoopback: false,
         cdpPort: 443,
         color: "#0f0",
-        driver: "openclaw",
+        driver: "assistme",
         attachOnly: false,
       },
       getProfileState: () => ({ profile: {} as never, running: null }),
       stopRunningBrowser: vi.fn(async () => ({ stopped: false })),
       isHttpReachable: vi.fn(async () => false),
-      resolveOpenClawUserDataDir: (name: string) => `/tmp/${name}`,
+      resolveAssistMeUserDataDir: (name: string) => `/tmp/${name}`,
     });
 
     await expect(ops.resetProfile()).rejects.toThrow(/only supported for local profiles/i);
   });
 
   it("stops local browser, closes playwright connection, and trashes profile dir", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-reset-"));
-    const profileDir = path.join(tempRoot, "openclaw");
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "assistme-reset-"));
+    const profileDir = path.join(tempRoot, "assistme");
     fs.mkdirSync(profileDir, { recursive: true });
 
     const stopRunningBrowser = vi.fn(async () => ({ stopped: true }));
@@ -88,19 +88,19 @@ describe("createProfileResetOps", () => {
 
     const ops = createProfileResetOps({
       profile: {
-        name: "openclaw",
+        name: "assistme",
         cdpUrl: "http://127.0.0.1:18800",
         cdpHost: "127.0.0.1",
         cdpIsLoopback: true,
         cdpPort: 18800,
         color: "#f60",
-        driver: "openclaw",
+        driver: "assistme",
         attachOnly: false,
       },
       getProfileState,
       stopRunningBrowser,
       isHttpReachable,
-      resolveOpenClawUserDataDir: () => profileDir,
+      resolveAssistMeUserDataDir: () => profileDir,
     });
 
     const result = await ops.resetProfile();
@@ -116,26 +116,26 @@ describe("createProfileResetOps", () => {
   });
 
   it("forces playwright disconnect when loopback cdp is occupied by non-owned process", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-reset-no-own-"));
-    const profileDir = path.join(tempRoot, "openclaw");
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "assistme-reset-no-own-"));
+    const profileDir = path.join(tempRoot, "assistme");
     fs.mkdirSync(profileDir, { recursive: true });
 
     const stopRunningBrowser = vi.fn(async () => ({ stopped: false }));
     const ops = createProfileResetOps({
       profile: {
-        name: "openclaw",
+        name: "assistme",
         cdpUrl: "http://127.0.0.1:18800",
         cdpHost: "127.0.0.1",
         cdpIsLoopback: true,
         cdpPort: 18800,
         color: "#f60",
-        driver: "openclaw",
+        driver: "assistme",
         attachOnly: false,
       },
       getProfileState: () => ({ profile: {} as never, running: null }),
       stopRunningBrowser,
       isHttpReachable: vi.fn(async () => true),
-      resolveOpenClawUserDataDir: () => profileDir,
+      resolveAssistMeUserDataDir: () => profileDir,
     });
 
     await ops.resetProfile();
